@@ -1,4 +1,4 @@
-# SentinelVision: Visor de Seguridad Inteligente (v1.2.0)
+# SentinelVision: Visor de Seguridad Inteligente (v1.2.1)
 
 Este proyecto es una herramienta de **Visión Artificial** diseñada para entornos industriales o académicos. Su objetivo principal es la **prevención de riesgos laborales mediante la monitorización en tiempo real del uso de equipos de protección  individual (EPIs) oculares**, conocidas comunmente como **gafas de seguridad**. En próximas versiones se incorporará la detección falta de cascos  de seguridad, ode distracciones, como el uso de teléfonos móviles, en puestos de trabajo (torno, banco de trabajo, fresadora, etc.).
 
