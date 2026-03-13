@@ -1,0 +1,173 @@
+SENTINELVERSION v1.2.1 - SOLUCION DE COMPATIBILIDAD
+=========================================================
+
+PROBLEMA IDENTIFICADO
+─────────────────────
+
+El error que aparecia era:
+  AttributeError: type object 'YOLO' has no attribute 'from_pretrained'
+
+RAZON DEL ERROR
+───────────────
+
+El metodo `from_pretrained()` que se utilizaba en v1.2.0 pertenecia a la 
+libreria `ultralyticsplus`, que ha sido DEPRECATED (descontinuada) y ya 
+no es compatible con versiones recientes de ultralytics.
+
+La version actual de ultralytics no incluye este metodo, por lo que el 
+programa no podia ejecutarse.
+
+SOLUCION IMPLEMENTADA
+─────────────────────
+
+Se ha reemplazado el metodo `from_pretrained()` por:
+
+1. Una funcion personalizada que descarga directamente desde Hugging Face
+2. Carga del modelo usando YOLO() con la ruta local
+
+El nuevo flujo es:
+
+  [Verificar si modelo existe localmente]
+       |
+       ├─ SI  → Cargar modelo local
+       |
+       └─ NO  → Descargar desde Hugging Face → Guardar localmente → Cargar
+
+VENTAJAS DE ESTA SOLUCION
+──────────────────────────
+
+✓ No depende de ultralyticsplus (deprecated)
+✓ Compatible con versiones actuales de ultralytics
+✓ Descarga el modelo solo una vez (se cachea localmente)
+✓ Mas rapido en ejecuciones posteriores
+✓ Mejor manejo de errores y mensajes informativos
+✓ Compatible con Windows y Linux sin cambios
+
+CAMBIOS TECNICOS EN EL CODIGO
+──────────────────────────────
+
+Archivo: safety_glasses_detector.py
+
+ANTES (v1.2.0):
+  modelo = YOLO.from_pretrained("keremberke/yolov8n-protective-equipment-detection")
+
+AHORA (v1.2.1):
+  def descargar_modelo(nombre_modelo, url_base):
+      # Crea carpeta ~/.sentinel_vision/modelos
+      # Descarga si no existe localmente
+      # Devuelve la ruta al archivo
+
+  ruta_modelo = descargar_modelo("best.pt", 
+                                 "https://huggingface.co/...")
+  modelo = YOLO(ruta_modelo)
+
+CAMBIOS EN OTROS ARCHIVOS
+──────────────────────────
+
+1. instalador.bat (Windows)
+   - Removidas caracteres especiales (───) que causaban errores
+   - Simplificados comentarios para mejor compatibilidad
+   - Mejorada legibilidad de mensajes
+
+2. instalador.sh (Linux)
+   - Annadida mejor manejo de errores
+   - Annadidos colores para mejor UX
+   - Annadido reintentos automticos en caso de fallos de red
+   - Mejorado mensaje de uso al finalizar
+
+3. requirements.txt
+   - Removido ultralyticsplus (ya no es necesario)
+   - Annadidas versiones minimas recomendadas
+   - Annadidos comentarios explicativos
+
+PASOS PARA ACTUALIZAR EL PROYECTO
+──────────────────────────────────
+
+Si ya tienes la v1.2.0 instalada:
+
+En Windows:
+  1. Reemplaza safety_glasses_detector.py (versión v1.2.1)
+  2. Reemplaza instalador.bat
+  3. Reemplaza requirements.txt
+  4. Ejecuta instalador.bat nuevamente
+
+En Linux:
+  1. Reemplaza safety_glasses_detector.py (versión v1.2.1)
+  2. Reemplaza instalador.sh
+  3. Reemplaza requirements.txt
+  4. Ejecuta: chmod +x instalador.sh && ./instalador.sh
+
+UBICACION DEL MODELO DESCARGADO
+────────────────────────────────
+
+Windows:
+  C:\Users\[tu_usuario]\.sentinel_vision\modelos\best.pt
+
+Linux/macOS:
+  ~/.sentinel_vision/modelos/best.pt
+
+El modelo se descarga automticamente en la primera ejecución y se cachea
+para usos posteriores.
+
+TAMAÑO DEL MODELO
+─────────────────
+
+El archivo best.pt ocupa aproximadamente 25-30 MB.
+
+Primera ejecución: Descarga el modelo (requiere conexión a Internet)
+Ejecuciones posteriores: Carga desde el disco local (más rápido)
+
+PRUEBAS REALIZADAS
+───────────────────
+
+La versión v1.2.1 ha sido probada con:
+  - Windows 10/11 (Python 3.12)
+  - Ubuntu 22.04 LTS (Python 3.10)
+  - Ultralytics 8.0+
+  - OpenCV 4.8+
+
+MEJORAS ADICIONALES EN v1.2.1
+──────────────────────────────
+
+1. Mejor retroalimentación visual:
+   - Indicador de FPS en tiempo real
+   - Contador de detecciones por frame
+   - Alertas visuales mejoradas
+
+2. Mejor manejo de errores:
+   - Detección de fallos de cámara
+   - Reintentos automticos
+   - Mensajes de error claros
+
+3. Informacion ampliada:
+   - Contador de frames procesados
+   - Estadísticas de detección
+   - Mensajes informativos al finalizar
+
+SOPORTE Y ACTUALIZACIONES FUTURAS
+──────────────────────────────────
+
+Para futuras versiones, se planea:
+  - Annadir detección de cascos (hard-hat)
+  - Annadir detección de distracción por móviles
+  - Sistema de alarma sonora
+  - Registro de incidentes
+  - Interfaz gráfica mejorada
+
+CONTACTO
+────────
+
+En caso de problemas:
+  - Profesor: Alberto Durán Pérez
+  - Centro: IES Frei Martín Sarmiento
+  - Localidad: Pontevedra
+
+Notas para los alumnos:
+  El cambio de from_pretrained() a descarga directa es un buen ejemplo
+  de cómo la programación es "viva" - las librerías cambian, deprecan
+  métodos antiguos y es necesario adaptarse continuamente. Esta capacidad
+  de adaptación es fundamental en la profesión de programador.
+
+Version: SentinelVision v1.2.1
+Fecha: Marzo 2026
+Licencia: MIT + AGPL-3.0

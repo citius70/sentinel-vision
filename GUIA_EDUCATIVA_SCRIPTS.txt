@@ -1,0 +1,373 @@
+ENTENDIENDO LOS SCRIPTS DE INSTALACION
+Guía educativa para alumnos de 2º Bachillerato
+SentinelVision v1.2.1
+
+================================================================================
+¿QUE ES UN SCRIPT?
+================================================================================
+
+Un script es un archivo de "ordenes" o "instrucciones" que el ordenador ejecuta
+automáticamente. Es como un programa pequeño que hace tareas automaticamente.
+
+Ejemplos de scripts que probablemente has visto:
+
+  Windows:  archivo.bat  → Script en lenguaje Batch
+  Linux:    archivo.sh   → Script en lenguaje Bash
+  Mac:      archivo.command → Script en Bash
+
+Analogía: Si Python es como escribir un libro, un script es como una lista
+de compra que entrega al ordenador para que haga varias cosas seguidas.
+
+================================================================================
+WINDOWS: instalador_comentado.bat
+================================================================================
+
+¿QUE ES .bat?
+─────────────
+.bat = Batch (lote en inglés)
+Es un lenguaje de scripting específico de Windows.
+
+ESTRUCTURA BASICA:
+──────────────────
+
+  @echo off                 ← No mostrar los comandos (más limpio)
+  REM Esto es un comentario ← REM = Remark (comentario)
+  echo Hola mundo           ← Mostrar un mensaje
+  pause                     ← Esperar a que el usuario presione una tecla
+
+¿COMO FUNCIONA nuestro instalador.bat?
+───────────────────────────────────────
+
+PASO 1: Comprobar Python
+  
+  python -c "import sys; exit(0 if sys.version_info >= (3, 12) else 1)"
+
+  ¿Qué hace?
+    Ejecuta Python y verifica su versión
+    Si es >= 3.12, devuelve 0 (éxito)
+    Si es < 3.12, devuelve 1 (error)
+
+  %errorlevel% = Variable especial que guarda el resultado anterior
+  
+  if %errorlevel% neq 0 (   ← Si NO fue exitoso...
+    echo Python no encontrado
+    REM descargar e instalar Python
+  )
+
+  neq = "not equal" (no igual)
+  También existen: equ (igual), gtr (mayor), lss (menor)
+
+PASO 2: Comprobar pip
+
+  pip --version >nul 2>&1
+
+  ¿Qué significa esto?
+    ">nul" = No mostrar la salida (nul = null, nada)
+    "2>&1" = Redirigir también los errores
+
+  En caso de no encontrarlo:
+    python -m ensurepip --upgrade
+    
+    "-m" = Ejecutar un módulo de Python
+    "ensurepip" = Módulo especial que instala pip automáticamente
+
+PASO 3: Instalar librerías
+
+  pip install --user opencv-python
+  pip install --user --upgrade ultralytics
+
+  ¿Qué significa?
+    "pip install" = Descargar e instalar un paquete
+    "--user" = Solo para el usuario actual (no requiere admin)
+    "--upgrade" = Actualizar si ya existe
+
+  Estas líneas descargan e instalan:
+    • opencv-python (26 MB)
+    • ultralytics (50 MB)
+
+PASO 4: Preguntar si ejecutar
+
+  set /p respuesta="¿Deseas ejecutar SentinelVision? (s/n): "
+  
+  "set /p" = Esperar a que el usuario escriba algo
+  "respuesta=" = Guardar en la variable %respuesta%
+
+  if /i "%respuesta%"=="s" (
+    python safety_glasses_detector.py
+  )
+
+  "/i" = Case-insensitive (no importan mayúsculas)
+  Así que "S" y "s" funcionan igual
+
+VARIABLES EN BATCH:
+───────────────────
+
+Las variables en batch se rodean con %
+
+  %errorlevel%  = Código de resultado del último comando
+  %respuesta%   = Lo que el usuario escribió
+  %PATH%        = Ruta de búsqueda del sistema
+
+COMANDOS IMPORTANTES:
+─────────────────────
+
+  @echo off      = No mostrar comandos
+  echo texto     = Mostrar un mensaje
+  pause          = Esperar a que presione una tecla
+  if             = Condicional (si)
+  for            = Bucle (repetir)
+  exit /b 1      = Salir con código de error 1
+  del archivo    = Borrar un archivo
+  curl           = Descargar un archivo de Internet
+
+================================================================================
+LINUX: instalador_comentado.sh
+================================================================================
+
+¿QUE ES .sh?
+─────────────
+.sh = Shell script
+Es un lenguaje de scripting para Linux/Unix/Mac.
+
+BASH = Bourne Again Shell (la shell más común en Linux)
+Una shell es el intérprete de comandos del sistema.
+
+ESTRUCTURA BASICA:
+──────────────────
+
+  #!/bin/bash              ← "Shebang" - indica que es un script Bash
+  # Esto es un comentario  ← # = Comentario
+  echo "Hola mundo"        ← Mostrar un mensaje
+  ./script.sh              ← Ejecutar un script
+
+¿COMO FUNCIONA nuestro instalador.sh?
+──────────────────────────────────────
+
+PASO 1: Definir colores
+
+  GREEN='\033[0;32m'
+  RED='\033[0;31m'
+  YELLOW='\033[1;33m'
+  NC='\033[0m'
+
+  Estos son códigos ANSI que colorean el texto en la terminal:
+    \033[0;32m = Verde
+    \033[0;31m = Rojo
+    \033[1;33m = Amarillo
+    \033[0m = Normal (sin color)
+
+  Uso:
+    echo -e "${GREEN}Éxito!${NC}"
+    echo -e "${RED}Error!${NC}"
+
+  "-e" = Interpretar los códigos de color
+
+PASO 2: Actualizar repositorios
+
+  sudo apt update || { ... }
+
+  "sudo" = SuperUserDO (ejecutar como administrador)
+  "apt" = Advanced Package Tool (gestor de paquetes)
+  "apt update" = Descargar lista de paquetes disponibles
+
+  "||" = Operador OR (o en inglés)
+  Si el comando anterior falló, ejecutar lo siguiente
+
+  { ... } = Bloque de código agrupado
+
+PASO 3: Crear entorno virtual
+
+  if [ ! -d "venv" ]; then
+    python3 -m venv venv
+  fi
+
+  "[ ! -d "venv" ]" = Si la carpeta venv NO existe
+    [ ... ] = Test (condición)
+    ! = NOT (negación)
+    -d = directorio (directory)
+
+  "python3 -m venv venv" = Crear entorno virtual en carpeta venv
+    "-m" = Ejecutar un módulo
+    "venv" = Módulo que crea entornos virtuales
+
+  "source venv/bin/activate" = Activar el entorno virtual
+    Después, pip instalará en venv/ solo, no en todo el sistema
+
+PASO 4: Instalar librerías con reintentos
+
+  for i in 1 2 3; do
+    pip install opencv-python ultralytics && break || {
+      if [ $i -eq 3 ]; then
+        echo "Error"
+        exit 1
+      fi
+      echo "Reintentando..."
+      sleep 5
+    }
+  done
+
+  "for i in 1 2 3; do" = Bucle: repetir con i=1, i=2, i=3
+  "&&" = Operador AND (si el anterior fue exitoso)
+  "||" = Operador OR (si el anterior falló)
+  "break" = Salir del bucle
+  "$i" = El valor de la variable i
+  "[ $i -eq 3 ]" = Si i es igual a 3
+    "-eq" = equal (igual)
+    También existen: "-lt" (menor), "-gt" (mayor), "-ne" (no igual)
+  "sleep 5" = Esperar 5 segundos
+
+VARIABLES EN BASH:
+──────────────────
+
+Se definen sin $, pero se acceden con $
+
+  GREEN='...'     = Definir
+  echo ${GREEN}   = Acceder
+  echo $i         = Acceder a i
+
+COMANDOS IMPORTANTES:
+─────────────────────
+
+  echo          = Mostrar texto
+  sudo          = Ejecutar como administrador
+  apt           = Gestor de paquetes
+  python3       = Ejecutar Python 3
+  source        = Ejecutar un archivo
+  [ ]           = Condición de test
+  if/then/fi    = Condicionales
+  for/do/done   = Bucles
+  ||            = O (OR)
+  &&            = Y (AND)
+  exit          = Salir
+
+================================================================================
+COMPARACION: BATCH vs BASH
+================================================================================
+
+                    BATCH (.bat)              BASH (.sh)
+─────────────────────────────────────────────────────────────────────
+Sistema             Windows                   Linux/Mac/Unix
+Comando comentario  REM                       #
+Mostrar texto       echo                      echo
+Condicional         if ... ()                 if [ ] then ... fi
+Bucle               for                       for ... do ... done
+Variables           %variable%                $variable
+Operador Y          &                         &&
+Operador O          |                         ||
+Ejecutar script     script.bat (doble click)  ./script.sh o bash script.sh
+Operador NO         NOT                       !
+Comparación igual   equ                       -eq
+Comparación mayor   gtr                       -gt
+Comparación menor   lss                       -lt
+
+================================================================================
+¿POR QUE NECESITAMOS ESTOS SCRIPTS?
+================================================================================
+
+Imagina que tienes que hacer esto manualmente:
+
+  1. Abrir terminal
+  2. Escribir: python --version
+  3. Si falla, descargar Python
+  4. Escribir: pip --version
+  5. Si falla, escribir: python -m ensurepip --upgrade
+  6. Escribir: pip install opencv-python
+  7. Esperar a que termine
+  8. Escribir: pip install ultralytics
+  9. Esperar a que termine
+  10. Escribir: python safety_glasses_detector.py
+
+¡Son 10 pasos! Con el script, solo necesitas:
+  Windows: Doble clic en instalador.bat
+  Linux: ./instalador.sh
+
+El script hace TODO automáticamente. ¡Es mucho más rápido y evita errores!
+
+================================================================================
+CONCEPTOS IMPORTANTES QUE HEMOS APRENDIDO
+================================================================================
+
+1. AUTOMATIZACION
+   Los scripts automatizan tareas repetitivas.
+   Esto es fundamental en programación.
+
+2. CONDICIONES (if/else)
+   Permiten que el programa "tome decisiones"
+   "Si Python existe, usar. Si no, descargar"
+
+3. BUCLES (for)
+   Permiten repetir acciones
+   "Reintentar 3 veces si la descarga falla"
+
+4. MANEJO DE ERRORES
+   Los buenos scripts detectan y reportan errores
+   "Si algo falla, mostrar un mensaje útil"
+
+5. REDIRECCIONAMIENTO
+   Controlar donde van los mensajes
+   ">nul 2>&1" = No mostrar nada
+   "echo" = Mostrar en pantalla
+
+6. VARIABLES
+   Almacenan valores que se usan después
+   "%errorlevel%" guarda el resultado del último comando
+
+7. PIPELINES/CANALIZACIONES
+   Encadenar comandos
+   "||" si falla, intenta lo siguiente
+   "&&" si funciona, continúa
+
+================================================================================
+TAREAS PARA LOS ALUMNOS
+================================================================================
+
+1. ANALISIS DE CODIGO
+   Lee instalador_comentado.bat o instalador_comentado.sh
+   Para cada linea, anota:
+     - Qué comando es
+     - Qué parámetros tiene
+     - Qué es lo que hace
+
+2. MODIFICACION
+   ¿Podrías cambiar el número de reintentos de 3 a 5?
+   ¿Qué linea tendrías que modificar?
+
+3. CREACION
+   Crea tu propio script simple en Batch o Bash que:
+     1. Compruebe si existe un archivo
+     2. Si existe, muestre un mensaje
+     3. Si no existe, cree uno vacío
+
+4. DEBUGGING (DEPURACION)
+   Si el script falla:
+     - Lee el mensaje de error
+     - Verifica la conexión a Internet
+     - Comprueba la versión de Python
+     - Intenta manual cada comando
+
+================================================================================
+RECURSOS ADICIONALES
+================================================================================
+
+Para aprender más sobre scripts:
+
+  • Documentación oficial de Batch:
+    https://learn.microsoft.com/es-es/windows-server/administration/windows-commands/windows-commands-glossary
+
+  • Documentación oficial de Bash:
+    https://www.gnu.org/software/bash/manual/bash.html
+
+  • Tutorial interactivo de Bash:
+    https://www.learnshell.org/
+
+En el taller:
+  • Pide al profesor que te muestre cómo escribir un script simple
+  • Practica escribiendo scripts pequeños
+  • Usa scripts para automatizar tareas de tu ordenador
+
+================================================================================
+
+Fecha: Marzo 2026
+Nivel: 2º Bachillerato
+Profesor: Alberto Durán Pérez
+IES Frei Martin Sarmiento - Pontevedra
