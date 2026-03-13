@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Detector de Gafas de Seguridad</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --border: #30363d;
+      --accent: #238636;
+      --accent2: #1f6feb;
+      --warn: #da3633;
+      --text: #e6edf3;
+      --muted: #8b949e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    #nav {
+      position: fixed;
+      right: 22px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 100;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--border);
+      cursor: pointer;
+      transition: background .3s, transform .3s;
+    }
+
+    .dot.active {
+      background: var(--accent2);
+      transform: scale(1.4);
+    }
+
+    .slide {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 20% 50%, rgba(31, 111, 235, .07) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .inner {
+      max-width: 860px;
+      width: 100%;
+    }
+
+    /* HERO */
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(35, 134, 54, .15);
+      border: 1px solid rgba(35, 134, 54, .4);
+      border-radius: 20px;
+      padding: 6px 16px;
+      font-size: .8rem;
+      color: #3fb950;
+      margin-bottom: 28px;
+      letter-spacing: .05em;
+    }
+
+    .hero-badge span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #3fb950;
+      animation: pulse 1.5s infinite;
+      display: inline-block;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1)
+      }
+
+      50% {
+        opacity: .4;
+        transform: scale(.7)
+      }
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 20px;
+    }
+
+    h1 em {
+      font-style: normal;
+      color: #58a6ff;
+    }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 580px;
+      line-height: 1.7;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 32px;
+    }
+
+    .tag {
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: .8rem;
+      font-weight: 600;
+      border: 1px solid;
+    }
+
+    .tag.py {
+      background: rgba(55, 118, 171, .15);
+      border-color: rgba(55, 118, 171, .5);
+      color: #79c0ff;
+    }
+
+    .tag.cv {
+      background: rgba(35, 134, 54, .12);
+      border-color: rgba(35, 134, 54, .4);
+      color: #3fb950;
+    }
+
+    .tag.ai {
+      background: rgba(163, 113, 247, .12);
+      border-color: rgba(163, 113, 247, .4);
+      color: #d2a8ff;
+    }
+
+    .tag.ind {
+      background: rgba(218, 54, 51, .12);
+      border-color: rgba(218, 54, 51, .4);
+      color: #ff7b72;
+    }
+
+    .sec-label {
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 800;
+      margin-bottom: 28px;
+    }
+
+    h2 em {
+      font-style: normal;
+      color: #58a6ff;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .grid-2 {
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
+    .grid-3 {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px;
+      transition: border-color .25s, transform .25s;
+    }
+
+    .card:hover {
+      border-color: #58a6ff44;
+      transform: translateY(-3px);
+    }
+
+    .card-icon {
+      font-size: 2rem;
+      margin-bottom: 12px;
+    }
+
+    .card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .card p {
+      font-size: .85rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .card .version {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: .72rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: rgba(88, 166, 255, .1);
+      border: 1px solid rgba(88, 166, 255, .3);
+      color: #79c0ff;
+    }
+
+    /* FLUJO */
+    .flow {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .flow-step {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      position: relative;
+    }
+
+    .flow-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 19px;
+      top: 44px;
+      width: 2px;
+      height: calc(100% - 8px);
+      background: linear-gradient(var(--border), transparent);
+    }
+
+    .step-num {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      background: var(--accent2);
+      color: #fff;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .9rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .step-body {
+      padding: 6px 0 28px;
+    }
+
+    .step-body h3 {
+      font-size: .95rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .step-body p {
+      font-size: .83rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .step-body code {
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 7px;
+      font-size: .78rem;
+      color: #79c0ff;
+    }
+
+    /* ESTADO VISUAL */
+    .status-row {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .status-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+    }
+
+    .status-card.ok {
+      border-left: 4px solid var(--accent);
+    }
+
+    .status-card.warn {
+      border-left: 4px solid var(--warn);
+    }
+
+    .status-card.neu {
+      border-left: 4px solid #58a6ff;
+    }
+
+    .status-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .status-dot.ok {
+      background: var(--accent);
+    }
+
+    .status-dot.warn {
+      background: var(--warn);
+    }
+
+    .status-dot.neu {
+      background: #58a6ff;
+    }
+
+    .status-card .stxt h4 {
+      font-size: .9rem;
+      font-weight: 700;
+    }
+
+    .status-card .stxt p {
+      font-size: .8rem;
+      color: var(--muted);
+    }
+
+    /* CODE BLOCK */
+    .code-block {
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 24px;
+      font-family: 'Courier New', monospace;
+      font-size: .82rem;
+      line-height: 1.8;
+      color: #e6edf3;
+      overflow-x: auto;
+      margin-top: 8px;
+    }
+
+    .kw {
+      color: #ff7b72;
+    }
+
+    .fn {
+      color: #d2a8ff;
+    }
+
+    .cm {
+      color: #8b949e;
+      font-style: italic;
+    }
+
+    .st {
+      color: #a5d6ff;
+    }
+
+    .nb {
+      color: #79c0ff;
+    }
+
+    /* RESUMEN */
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    .footer-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .footer-card .big {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #58a6ff;
+    }
+
+    .footer-card .lbl {
+      font-size: .78rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 28px 0;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: var(--muted);
+      font-size: .75rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      animation: fadeUpDown 2s infinite;
+    }
+
+    @keyframes fadeUpDown {
+
+      0%,
+      100% {
+        opacity: .4;
+        transform: translateX(-50%) translateY(0)
+      }
+
+      50% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(-6px)
+      }
+    }
+
+    .arrow {
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="nav">
+    <div class="dot active" onclick="goTo(0)"></div>
+    <div class="dot" onclick="goTo(1)"></div>
+    <div class="dot" onclick="goTo(2)"></div>
+    <div class="dot" onclick="goTo(3)"></div>
+    <div class="dot" onclick="goTo(4)"></div>
+  </div>
+
+  <!-- SLIDE 1 · HERO -->
+  <section class="slide" id="s0">
+    <div class="inner">
+      <div class="hero-badge"><span></span> Visión Artificial · Seguridad Laboral</div>
+      <h1>Detector de<br /><em>Gafas de Seguridad</em><br />en Tiempo Real</h1>
+      <p class="hero-sub">
+        Sistema de inteligencia artificial que analiza el vídeo de una cámara
+        y detecta automáticamente si los trabajadores llevan sus EPIs oculares,
+        emitiendo alertas visuales al instante.
+      </p>
+      <div class="tags">
+        <span class="tag py">🐍 Python 3.10+</span>
+        <span class="tag cv">📷 OpenCV</span>
+        <span class="tag ai">🤖 YOLOv8</span>
+        <span class="tag ind">🦺 Seguridad Industrial</span>
+      </div>
+    </div>
+    <div class="scroll-hint">
+      <div class="arrow">↓</div>Desplázate para ver más
+    </div>
+  </section>
+
+  <!-- SLIDE 2 · LIBRERÍAS -->
+  <section class="slide" id="s1">
+    <div class="inner">
+      <div class="sec-label">Stack tecnológico</div>
+      <h2>Lenguaje y <em>Librerías</em></h2>
+      <div class="grid grid-2">
+
+        <div class="card">
+          <div class="card-icon">🐍</div>
+          <h3>Python</h3>
+          <p>Lenguaje principal. Sencillo, potente y con el mayor ecosistema de librerías para IA y visión por
+            computador.</p>
+          <span class="version">≥ 3.10</span>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">📷</div>
+          <h3>OpenCV</h3>
+          <p>Captura vídeo de la cámara en tiempo real y dibuja los rectángulos y textos sobre cada fotograma.</p>
+          <span class="version">opencv-python</span>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">🤖</div>
+          <h3>Ultralytics YOLOv8</h3>
+          <p>Red neuronal que analiza cada fotograma y detecta si la persona lleva o no gafas de seguridad.</p>
+          <span class="version">ultralytics</span>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">☁️</div>
+          <h3>Modelo especializado</h3>
+          <p>Modelo preentrenado descargado automáticamente desde Hugging Face, específico para gafas de seguridad.</p>
+          <span class="version">keremberke/yolov8n-safety-glasses</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 3 · CÓMO FUNCIONA -->
+  <section class="slide" id="s2">
+    <div class="inner">
+      <div class="sec-label">Funcionamiento paso a paso</div>
+      <h2>¿Cómo <em>funciona</em>?</h2>
+      <div class="flow">
+        <div class="flow-step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h3>Cargar el modelo</h3>
+            <p>Se descarga y carga el modelo de IA con <code>YOLO("keremberke/yolov8n-safety-glasses")</code>. Solo
+              ocurre una vez al arrancar.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h3>Abrir la cámara</h3>
+            <p>OpenCV abre la webcam con <code>cv2.VideoCapture(0)</code> y empieza a capturar fotogramas.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <h3>Analizar cada fotograma</h3>
+            <p>El modelo examina la imagen y detecta personas, indicando si llevan gafas o no y con qué nivel de
+              confianza.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <h3>Dibujar el resultado</h3>
+            <p>Se dibuja un rectángulo verde (con gafas) o rojo (sin gafas) alrededor de cada persona detectada.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="step-num">5</div>
+          <div class="step-body">
+            <h3>Mostrar y repetir</h3>
+            <p>El fotograma se muestra en pantalla y el proceso vuelve al paso 3, creando el efecto de vídeo en tiempo
+              real.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 4 · INDICADORES VISUALES -->
+  <section class="slide" id="s3">
+    <div class="inner">
+      <div class="sec-label">Interfaz en tiempo real</div>
+      <h2>Indicadores <em>visuales</em></h2>
+
+      <div class="status-row">
+        <div class="status-card ok">
+          <div class="status-dot ok"></div>
+          <div class="stxt">
+            <h4>✔ Con gafas de seguridad</h4>
+            <p>Rectángulo verde con el mensaje "CON gafas" y el porcentaje de confianza del modelo</p>
+          </div>
+        </div>
+        <div class="status-card warn">
+          <div class="status-dot warn"></div>
+          <div class="stxt">
+            <h4>✘ Sin gafas de seguridad</h4>
+            <p>Rectángulo rojo con el mensaje "SIN gafas" y el porcentaje de confianza del modelo</p>
+          </div>
+        </div>
+        <div class="status-card neu">
+          <div class="status-dot neu"></div>
+          <div class="stxt">
+            <h4>⚙ Umbral de confianza</h4>
+            <p>Solo se muestran detecciones con más del 50% de confianza para evitar falsos positivos</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="divider" />
+      <p class="sec-label">Fragmento clave del código</p>
+      <div class="code-block">
+        <span class="kw">if</span> <span class="st">"glasses"</span> <span class="kw">in</span> clase:
+        color = (<span class="nb">0</span>, <span class="nb">200</span>, <span class="nb">80</span>) <span class="cm">#
+          Verde → lleva gafas ✔</span>
+        mensaje = <span class="fn">f</span><span class="st">"CON gafas ({confianza:.0%})"</span>
+        <span class="kw">else</span>:
+        color = (<span class="nb">0</span>, <span class="nb">60</span>, <span class="nb">220</span>) <span class="cm">#
+          Rojo → sin gafas ✘</span>
+        mensaje = <span class="fn">f</span><span class="st">"SIN gafas ({confianza:.0%})"</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 5 · RESUMEN -->
+  <section class="slide" id="s4">
+    <div class="inner">
+      <div class="sec-label">Resumen del proyecto</div>
+      <h2>En <em>cifras</em></h2>
+
+      <div class="footer-grid">
+        <div class="footer-card">
+          <div class="big">2</div>
+          <div class="lbl">Librerías a instalar</div>
+        </div>
+        <div class="footer-card">
+          <div class="big">~65</div>
+          <div class="lbl">Líneas de código</div>
+        </div>
+        <div class="footer-card">
+          <div class="big">50%</div>
+          <div class="lbl">Umbral de confianza</div>
+        </div>
+        <div class="footer-card">
+          <div class="big">1</div>
+          <div class="lbl">Archivo principal</div>
+        </div>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="grid grid-3" style="margin-top:0">
+        <div class="card">
+          <div class="card-icon">📦</div>
+          <h3>Instalación</h3>
+          <p>Un solo comando:<br /><code style="color:#79c0ff">pip install -r requirements.txt</code></p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔧</div>
+          <h3>Ampliable</h3>
+          <p>Se puede extender con logs en CSV, alertas por correo o soporte para múltiples cámaras.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🎓</div>
+          <h3>Educativo</h3>
+          <p>Código lineal, variables en español y comentarios numerados, pensado para 2º Bachillerato.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+
+    function goTo(i) { slides[i].scrollIntoView({ behavior: 'smooth' }); }
+
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const i = [...slides].indexOf(e.target);
+          dots.forEach(d => d.classList.remove('active'));
+          dots[i].classList.add('active');
+        }
+      });
+    }, { threshold: 0.5 });
+
+    slides.forEach(s => obs.observe(s));
+  </script>
+</body>
+
+</html>

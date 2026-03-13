@@ -1,0 +1,58 @@
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# On branch main
+#
+# Initial commit
+#
+# Changes to be committed:
+#	new file:   .gitold/COMMIT_EDITMSG
+#	new file:   .gitold/FETCH_HEAD
+#	new file:   .gitold/HEAD
+#	new file:   .gitold/ORIG_HEAD
+#	new file:   .gitold/config
+#	new file:   .gitold/description
+#	new file:   .gitold/hooks/applypatch-msg.sample
+#	new file:   .gitold/hooks/commit-msg.sample
+#	new file:   .gitold/hooks/fsmonitor-watchman.sample
+#	new file:   .gitold/hooks/post-update.sample
+#	new file:   .gitold/hooks/pre-applypatch.sample
+#	new file:   .gitold/hooks/pre-commit.sample
+#	new file:   .gitold/hooks/pre-merge-commit.sample
+#	new file:   .gitold/hooks/pre-push.sample
+#	new file:   .gitold/hooks/pre-rebase.sample
+#	new file:   .gitold/hooks/pre-receive.sample
+#	new file:   .gitold/hooks/prepare-commit-msg.sample
+#	new file:   .gitold/hooks/push-to-checkout.sample
+#	new file:   .gitold/hooks/sendemail-validate.sample
+#	new file:   .gitold/hooks/update.sample
+#	new file:   .gitold/index
+#	new file:   .gitold/info/exclude
+#	new file:   .gitold/logs/HEAD
+#	new file:   .gitold/logs/refs/heads/main
+#	new file:   .gitold/logs/refs/remotes/origin/main
+#	new file:   .gitold/objects/16/c8aa1d23412f7ac65800eac7026badb956d43b
+#	new file:   .gitold/objects/1a/cab3852475b92476f1023963225ba2b393f77e
+#	new file:   .gitold/objects/38/00f53bba9044ccc8a3e009a6659e899969481d
+#	new file:   .gitold/objects/47/d514ad281efa22d25c6e3bda10c1069f8f76c6
+#	new file:   .gitold/objects/4d/3a34a252c86aa3ebe7853a3aee5625a33d07ba
+#	new file:   .gitold/objects/70/8182b47482ddf8734aad803469ab878b28a0b2
+#	new file:   .gitold/objects/8e/0a442ea0c9c6e37a3b8ad853f0fda3a4be8162
+#	new file:   .gitold/objects/a5/7ea6c0c0e1236f6408a0f9c494345f5bb1d503
+#	new file:   .gitold/objects/c5/600a27160358864594e78dc4b11ab37c6494c2
+#	new file:   .gitold/objects/c9/51faf99f392795be4bec0f6e7c5859427ea836
+#	new file:   .gitold/objects/cc/6eca79f3a1b3b613381100f4518fcd7c5ee8d0
+#	new file:   .gitold/objects/e8/ceb3b5d862f1fc9324e87646d50a248982ba93
+#	new file:   .gitold/refs/heads/main
+#	new file:   .gitold/refs/remotes/origin/main
+#	new file:   README.html
+#	new file:   README.md
+#	new file:   borrar.py
+#	new file:   frame.png
+#	new file:   instalador.sh
+#	new file:   instalar.bat
+#	new file:   presentacion.html
+#	new file:   requirements.txt
+#	new file:   safety_glasses_detector.py
+#

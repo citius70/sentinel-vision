@@ -1,0 +1,11 @@
+# ─────────────────────────────────────────────
+#  LIBRERÍAS NECESARIAS
+#  Instálalas ejecutando en la terminal:
+#  pip install -r requirements.txt
+# ─────────────────────────────────────────────
+
+# Captura y procesamiento de vídeo
+opencv-python
+
+# Modelo de inteligencia artificial YOLOv8
+ultralytics
