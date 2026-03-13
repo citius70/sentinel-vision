@@ -158,7 +158,7 @@ Incluso el programa podrá mejorarse en su detección "entrenándolo" con fotogr
 
 ## 9. Autores y Créditos
 
-Este proyecto ha sido desarrollado por los alumnos de **2º de Bachillerato B y C** de la asignatura de **Tecnologías d la Información y de la Comunicación" II** como parte del programa de formación técnica en Inteligencia Artificial y Visión Artificia
+Este proyecto ha sido desarrollado por los alumnos de **2º de Bachillerato B y C** de la asignatura de **Tecnologías de la Información y de la Comunicación" II** como parte del programa de formación técnica en Inteligencia Artificial y Visión Artificia
 * **Equipo de Desarrollo:** [Inserta aquí vuestros nombres/iniciales]
 * **Supervisión y Tutoría:** Profesor **Alberto Durán Pérez**
 * **Institución:** IES Frei Martín Sarmiento - Pontevedra
