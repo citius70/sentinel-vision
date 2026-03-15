@@ -171,7 +171,7 @@ Este proyecto ha sido desarrollado por los alumnos de **2º de Bachillerato B y 
 **SentinelVision** no es solo un proyecto teórico; ha sido validado en condiciones de trabajo reales dentro del centro educativo.
 
 * **Ubicación:** Talleres del **Ciclo Formativo de Grado Medio y Superior de Mecanizado**.
-* **Colaboración técnica:** El sistema ha sido testado en entornos con maquinaria en funcionamiento, gracias a la estrecha colaboración con el profesor del Departamenton de Mecanizado **Héctor**, quien facilitó la integración y las pruebas de detección en los puestos de trabajo.
+* **Colaboración técnica:** El sistema ha sido testado en entornos con maquinaria en funcionamiento, gracias a la estrecha colaboración con el profesor del Departamenton de Mecanizado **Héctor Costa Fernández**, quien facilitó la integración y las pruebas de detección en los puestos de trabajo.
 * **Aprobación:** El despliegue de las pruebas y la validación del sistema en el entorno de taller ha contado con la supervisión y aprobación del **Jefe de Departamento, Paco Alján**, asegurando el cumplimiento de las normativas de seguridad del taller.
 
 ---
